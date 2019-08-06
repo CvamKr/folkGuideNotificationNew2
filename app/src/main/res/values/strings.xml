@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ReceiveNoti</string>
+    <string name="default_notification_channel_id">Folk_Guide_channel</string>
+
+</resources>
