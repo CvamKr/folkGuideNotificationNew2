@@ -43,12 +43,12 @@ public class ProfileActivity extends AppCompatActivity {
         mUserId=mAuth.getCurrentUser().getUid();
         mUserName=mAuth.getCurrentUser().getDisplayName();
 
-        mFireStore.collection("Users").document(mUserId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        mFireStore.collection("FolkGuide").document(mUserId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 String user_name=documentSnapshot.getString("name");
-                String user_image=documentSnapshot.getString("image");
-                String user_email=documentSnapshot.getString("email");
+                //String user_image=documentSnapshot.getString("image");
+                String user_email=documentSnapshot.getString("email_id");
 
                 profile_name.setText(user_name);
                 email.setText(user_email);
@@ -59,8 +59,6 @@ public class ProfileActivity extends AppCompatActivity {
                         .centerCrop()
                         .placeholder(R.drawable.googleg_standard_color_18)
                         .into(profile_image_iv);*/
-
-
             }
         });
 

@@ -13,51 +13,40 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
-    private FirebaseFirestore mFireStore;
-    private String mUserId;
-
-
     @Override
-    public void onMessageReceived(final RemoteMessage remoteMessage) {
+    public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        final String messageTitle = remoteMessage.getNotification().getTitle();
-        final String messageBody = remoteMessage.getNotification().getBody();
+        String messageTitle = remoteMessage.getNotification().getTitle();
+        String messageBody = remoteMessage.getNotification().getBody();
 
-        mFireStore.collection("Users").document(mUserId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                String user_name = documentSnapshot.getString("name");
-                String user_image = documentSnapshot.getString("image");
-                String user_email = documentSnapshot.getString("email");
-            }
-        });
+        String click_action = remoteMessage.getNotification().getClickAction();
 
-
-        //String click_action = remoteMessage.getNotification().getClickAction();
-
-        String dataMessage = remoteMessage.getData().get("message");
-        String dataFrom = remoteMessage.getData().get("from_user_id");
+        String senders_name = remoteMessage.getData().get("name");
+        String senders_request = remoteMessage.getData().get("message");
+        String berth = remoteMessage.getData().get("berth");
 
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(MyFirebaseMessagingService.this, getString(R.string.default_notification_channel_id))
+                new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(messageTitle)
                         .setContentText(messageBody);
 
-        Intent resultIntent = new Intent(MyFirebaseMessagingService.this, MainActivity.class);
-        resultIntent.putExtra("message", dataMessage);
-        resultIntent.putExtra("from_user_id", dataFrom);
+        Intent resultIntent = new Intent(click_action);
+        resultIntent.putExtra("name", senders_name);
+        resultIntent.putExtra("message", senders_request);
+        resultIntent.putExtra("berth", berth);
 
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
-                        MyFirebaseMessagingService.this,
+                        this,
                         0,
                         resultIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
 
         mBuilder.setContentIntent(resultPendingIntent);
+
 
 
         int mNotificationId = (int) System.currentTimeMillis();

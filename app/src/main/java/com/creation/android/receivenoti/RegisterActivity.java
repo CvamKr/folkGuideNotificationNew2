@@ -75,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                     final String name = mNameField.getText().toString();
-                    String email = mEmailField.getText().toString();
+                    final String email = mEmailField.getText().toString();
                     String password = mPasswordField.getText().toString();
 
                     if(!TextUtils.isEmpty(name) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
@@ -88,6 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 if(task.isSuccessful()){
 
                                     final String user_id = mAuth.getCurrentUser().getUid();
+
 
                                     StorageReference user_profile = mStorage.child(user_id + ".jpg");
 
@@ -104,6 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                                                 Map<String, Object> userMap = new HashMap<>();
                                                 userMap.put("name", name);
+                                                userMap.put("email_id", email);
                                                 userMap.put("image", download_url);
                                                 userMap.put("token_id", token_id);
 

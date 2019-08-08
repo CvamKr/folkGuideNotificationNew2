@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button mRegPageBtn;
 
 
-    //private ProgressBar mProgressBar;
+    private ProgressBar mProgressBar;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         mLoginBtn = (Button) findViewById(R.id.login_btn);
         mRegPageBtn = (Button) findViewById(R.id.new_account_reg_btn);
 
-        //mProgressBar = (ProgressBar) findViewById(R.id.loginProgress);
+        mProgressBar = (ProgressBar) findViewById(R.id.loginProgress);
 
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
@@ -84,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
 
-                    //mProgressBar.setVisibility(View.VISIBLE);
+                    mProgressBar.setVisibility(View.VISIBLE);
 
                     mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -104,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                                     public void onSuccess(Void aVoid) {
 
                                         sendToMain();
-                                        //mProgressBar.setVisibility(View.INVISIBLE);
+                                        mProgressBar.setVisibility(View.INVISIBLE);
 
                                     }
                                 });
@@ -112,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
 
                                 Toast.makeText(LoginActivity.this, "Error : " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                //mProgressBar.setVisibility(View.INVISIBLE);
+                                mProgressBar.setVisibility(View.INVISIBLE);
 
                             }
 
