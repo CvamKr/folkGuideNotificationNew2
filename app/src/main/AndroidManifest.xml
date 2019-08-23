@@ -15,6 +15,13 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
+        <activity android:name=".Splash_screen" />
+        <activity android:name=".OTP_folk_member" />
+        <activity android:name=".Set_Password" />
+        <activity android:name=".OTP" />
+        <activity android:name=".Guest_signup" />
+        <activity android:name=".Folk_signup" />
+        <activity android:name=".Signup_method" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

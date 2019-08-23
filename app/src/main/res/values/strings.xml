@@ -2,4 +2,32 @@
     <string name="app_name">Folk Guide</string>
     <string name="default_notification_channel_id">Folk_Guide_channel</string>
 
+    <string name="login">Login</string>
+    <string name="et_folk_id">Folk ID / Phone number(if guest)</string>
+    <string name="forgot_id">Forgot ID?</string>
+    <string name="password">Password</string>
+    <string name="forgot_psw">Forgot password?</string>
+    <string name="btn_login">Login</string>
+    <string name="coming_for_first_time">Coming for the first time?</string>
+    <string name="sign_up">Sign up</string>
+
+    <!--Signup method strings-->
+    <string name="not_folk">Not a FOLK member?</string>
+    <string name="btn_guest">Guest Signup</string>
+    <string name="tv_or">Or</string>
+    <string name="already_folk">Already a FOLK member?</string>
+    <string name="btn_folk">FOLK Signup</string>
+
+    <!--Folk_signup strings-->
+    <string name="folk_signup">Sign up</string>
+    <string name="btn_folk_next">Next</string>
+
+    <!--Guest signup strings-->
+    <string name="guest_signup">Sign up as a guest</string>
+    <string name="et_name">Name</string>
+    <string name="et_phone">Mobile number</string>
+    <string name="et_email">Email</string>
+    <string name="et_dob">DOB (dd/mm/yy)</string>
+    <string name="btn_guest_next">Next</string>
+
 </resources>
