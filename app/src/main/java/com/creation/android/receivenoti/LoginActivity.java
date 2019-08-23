@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -94,21 +96,29 @@ public class LoginActivity extends AppCompatActivity {
                             if(task.isSuccessful()){
 
 
-                                String token_id = FirebaseInstanceId.getInstance().getToken();
-                                String current_id = mAuth.getCurrentUser().getUid();
-
-                                Map<String, Object> tokenMap = new HashMap<>();
-                                tokenMap.put("token_id", token_id);
-
-                                mFirestore.collection("FolkGuide").document(current_id).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( LoginActivity.this,  new OnSuccessListener<InstanceIdResult>() {
                                     @Override
-                                    public void onSuccess(Void aVoid) {
+                                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                                        String token_id = instanceIdResult.getToken();
+                                        Log.e("newToken",token_id);
+                                        String current_id = mAuth.getCurrentUser().getUid();
 
-                                        sendToMain();
-                                        mProgressBar.setVisibility(View.INVISIBLE);
+                                        Map<String, Object> tokenMap = new HashMap<>();
+                                        tokenMap.put("token_id", token_id);
+
+                                        mFirestore.collection("FolkGuide").document(current_id).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+
+                                                sendToMain();
+                                                mProgressBar.setVisibility(View.INVISIBLE);
+
+                                            }
+                                        });
 
                                     }
                                 });
+
 
                             } else {
 

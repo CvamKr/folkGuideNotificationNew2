@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -101,34 +103,38 @@ public class RegisterActivity extends AppCompatActivity {
                                                 // final String download_url = uploadTask.getResult().getDownloadUrl().toString();
                                                 final String download_url=uploadTask.getResult().getMetadata().getReference().getDownloadUrl().toString();
 
-                                                String token_id = FirebaseInstanceId.getInstance().getToken();
-
-                                                Map<String, Object> userMap = new HashMap<>();
-                                                userMap.put("name", name);
-                                                userMap.put("email_id", email);
-                                                userMap.put("image", download_url);
-                                                userMap.put("token_id", token_id);
-
-                                                mFirestore.collection("FolkGuide").document(user_id).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(RegisterActivity.this, new OnSuccessListener<InstanceIdResult>() {
                                                     @Override
-                                                    public void onSuccess(Void aVoid) {
+                                                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                                                        String folk_guide_token_id = instanceIdResult.getToken();
+                                                        Log.e("folk_guide_token_id", folk_guide_token_id);
+                                                        Map<String, Object> userMap = new HashMap<>();
+                                                        userMap.put("name", name);
+                                                        userMap.put("email", email);
+                                                        userMap.put("image", download_url);
+                                                        userMap.put("folk_guide_token_id", folk_guide_token_id);
+                                                        mFirestore.collection("FolkGuide").document(user_id).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
 
-                                                        mRegisterProgressBar.setVisibility(View.INVISIBLE);
+                                                                mRegisterProgressBar.setVisibility(View.INVISIBLE);
 
-                                                        sendToMain();
+                                                                sendToMain();
 
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
 
-                                                        Toast.makeText(RegisterActivity.this, "Error : " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                                        mRegisterProgressBar.setVisibility(View.INVISIBLE);
+                                                                Toast.makeText(RegisterActivity.this, "Error : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                                                mRegisterProgressBar.setVisibility(View.INVISIBLE);
+
+                                                            }
+                                                        });
+
 
                                                     }
                                                 });
-
-
                                             } else {
 
                                                 Toast.makeText(RegisterActivity.this, "Error : " + uploadTask.getException().getMessage(), Toast.LENGTH_LONG).show();
