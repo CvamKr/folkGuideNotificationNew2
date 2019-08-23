@@ -13,7 +13,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".NotificationActivity"></activity>
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".Splash_screen" />
         <activity android:name=".OTP_folk_member" />
