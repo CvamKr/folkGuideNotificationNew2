@@ -255,7 +255,7 @@ public class LoginActivity extends AppCompatActivity {
                                     String current_id = mAuth.getCurrentUser().getUid();
 
                                     Map<String, Object> tokenMap = new HashMap<>();
-                                    tokenMap.put("token_id", token_id);
+                                    tokenMap.put("folk_guide_token_id", token_id);
 
                                     db.collection("FolkGuide").document(current_id).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override

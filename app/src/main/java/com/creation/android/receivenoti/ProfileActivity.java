@@ -68,7 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
                 Map<String, Object> tokenMapRemove = new HashMap<>();
-                tokenMapRemove.put("token_id", FieldValue.delete());
+                tokenMapRemove.put("folk_guide_token_id", FieldValue.delete());
 
                 mFireStore.collection("FolkGuide").document(mUserId).update(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
