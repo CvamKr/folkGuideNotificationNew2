@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbarStyle="insideInset"
+    android:scrollbars="vertical">
+
+
+    <TextView
+        android:id="@+id/textViewBerth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_email"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="22dp"
+        android:paddingLeft="20dp"
+        android:text="berth" />
+
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="240dp"
+        android:layout_height="40dp"
+
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+
+        android:gravity="top|bottom|left"
+        android:hint="Name"
+        android:inputType="textPersonName"
+        android:paddingLeft="20dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_name"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="23dp"
+
+        android:gravity="top|bottom|left"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="20dp" />
+
+    <TextView
+        android:id="@+id/tv_phone"
+        android:layout_width="237dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/tv_email"
+        android:layout_alignParentStart="true"
+
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+
+        android:gravity="top|bottom|left"
+        android:hint="Phone"
+        android:inputType="phone"
+        android:paddingLeft="20dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button_accept_req"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="33dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="18dp"
+        android:layout_toRightOf="@+id/tv_name"
+        android:text="Accept" />
+
+    <Button
+        android:id="@+id/button_decline_req"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_accept_req"
+        android:layout_alignStart="@+id/button_accept_req"
+        android:layout_alignLeft="@+id/button_accept_req"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="41dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="19dp"
+        android:background="@android:color/holo_red_dark"
+        android:text="decline" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2sp"
+        android:layout_below="@+id/textViewMessage"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="26dp" />
+
+    <TextView
+        android:id="@+id/textViewMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewBerth"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="14sp"
+        android:layout_marginTop="22sp"
+        android:paddingLeft="20dp"
+        android:text="message" />
+
+
+</RelativeLayout>
+
+
+
+
+
+
