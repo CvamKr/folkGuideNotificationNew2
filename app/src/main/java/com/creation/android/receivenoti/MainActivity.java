@@ -20,7 +20,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -42,10 +44,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private FirebaseAuth mAuth;
     //private Toolbar mTopToolbar;
     Button profile_btn;
     private FirebaseFirestore mFireStore;
@@ -65,8 +68,9 @@ public class MainActivity extends AppCompatActivity {
 
     //recyclerView
     FolkGuideNotificationAdapter folkGuideNotificationAdapter;
+     String currentFolkGuideId;
 
-
+    FirebaseAuth mAuth;
 
     @Override
     protected void onStart() {
@@ -75,14 +79,54 @@ public class MainActivity extends AppCompatActivity {
 
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-
+//        Toast.makeText(this, "currentUserId: " + mAuth.getCurrentUser().getUid(), Toast.LENGTH_SHORT).show();
+//        Log.d(TAG, "onStart: currentUserID: " +currentUser.getUid());
 
 
         if (currentUser == null) {
 
             sendToLogin();
-
+            return;
         }
+        currentFolkGuideId = mAuth.getCurrentUser().getUid();
+
+        db.collection("FolkGuideNotifications")
+                .document(currentFolkGuideId)
+                .collection("Notifications")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                        Toast.makeText(MainActivity.this, "Folk Guide id " + currentFolkGuideId, Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "onCreate: folk guide id: " + currentFolkGuideId);
+
+                        folkBoyDataArrayList.clear();
+                        for (QueryDocumentSnapshot retrievedDocSnap : queryDocumentSnapshots) {
+
+                            FolkBoyData currentFolkBoy = retrievedDocSnap.toObject(FolkBoyData.class);
+                            folkBoyDataArrayList.add(currentFolkBoy);
+                        }
+
+                        folkGuideNotificationAdapter.notifyDataSetChanged();
+
+
+                        folkGuideNotificationAdapter.mySetOnClickListner(new FolkGuideNotificationAdapter.MyClickListner() {
+                            @Override
+                            public void myAcceptReqBtnClick(View view, int currentPosition) {
+
+                                sendAcceptNotification(currentPosition);
+                                Toast.makeText(MainActivity.this, "Request Accepted!", Toast.LENGTH_SHORT).show();
+//
+                            }
+
+                            @Override
+                            public void myDeclineReqBtnClick(View view, int currentPosition) {
+                                // showCustomDialog(currentPosition);
+                            }
+                        });
+                    }
+                });
+
 
     }
 
@@ -111,64 +155,61 @@ public class MainActivity extends AppCompatActivity {
 //        mNotifData.setText(" FROM : " + dataFrom + " | MESSAGE : " + dataMessage);
 
 
-
-
-
         setFolkGuideAdapter();
-        loadFolkGuideNotification();
-
+//        loadFolkGuideNotification();
 
 
     }
 
-    private void loadFolkGuideNotification() {
-        String currentFolkGuideId = mAuth.getCurrentUser().getUid();
-        Toast.makeText(this, "Folk Guide id " + currentFolkGuideId, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onCreate: folk guide id: " + currentFolkGuideId);
-
-        db.collection("FolkGuideNotifications")
-                .document(currentFolkGuideId)
-                .collection("Notifications")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        Log.d(TAG, "onSuccess: " + queryDocumentSnapshots.getDocuments());
-
-                        for (QueryDocumentSnapshot retrievedDocSnap : queryDocumentSnapshots) {
-
-                            FolkBoyData currentFolkBoy = retrievedDocSnap.toObject(FolkBoyData.class);
-
-                            folkBoyDataArrayList.add(currentFolkBoy);
-                        }
-                        folkGuideNotificationAdapter.notifyDataSetChanged();
-
-
-                        folkGuideNotificationAdapter.mySetOnClickListner(new FolkGuideNotificationAdapter.MyClickListner() {
-                            @Override
-                            public void myAcceptReqBtnClick(View view, int currentPosition) {
-                                sendAcceptNotification(currentPosition);
-                                Toast.makeText(MainActivity.this, "Request Accepted!", Toast.LENGTH_SHORT).show();
+//    private void loadFolkGuideNotification() {
+//        String currentFolkGuideId = mAuth.getCurrentUser().getUid();
+//        Toast.makeText(this, "Folk Guide id " + currentFolkGuideId, Toast.LENGTH_SHORT).show();
+//        Log.d(TAG, "onCreate: folk guide id: " + currentFolkGuideId);
 //
-                            }
-
-                            @Override
-                            public void myDeclineReqBtnClick(View view, int currentPosition) {
-                                // showCustomDialog(currentPosition);
-                            }
-                        });
-
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: " + e.toString());
-                    }
-                });
-
-    }
+//        db.collection("FolkGuideNotifications")
+//                .document(currentFolkGuideId)
+//                .collection("Notifications")
+//                .get()
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                        Log.d(TAG, "onSuccess: " + queryDocumentSnapshots.getDocuments());
+//
+//                        for (QueryDocumentSnapshot retrievedDocSnap : queryDocumentSnapshots) {
+//
+//                            FolkBoyData currentFolkBoy = retrievedDocSnap.toObject(FolkBoyData.class);
+//
+//                            folkBoyDataArrayList.add(currentFolkBoy);
+//                        }
+//                        folkGuideNotificationAdapter.notifyDataSetChanged();
+//
+//
+//                        folkGuideNotificationAdapter.mySetOnClickListner(new FolkGuideNotificationAdapter.MyClickListner() {
+//                            @Override
+//                            public void myAcceptReqBtnClick(View view, int currentPosition) {
+//
+//                                sendAcceptNotification(currentPosition);
+//                                Toast.makeText(MainActivity.this, "Request Accepted!", Toast.LENGTH_SHORT).show();
+////
+//                            }
+//
+//                            @Override
+//                            public void myDeclineReqBtnClick(View view, int currentPosition) {
+//                                // showCustomDialog(currentPosition);
+//                            }
+//                        });
+//
+//
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.d(TAG, "onFailure: " + e.toString());
+//                    }
+//                });
+//
+//    }
 
 
     private void setFolkGuideAdapter() {
@@ -185,22 +226,22 @@ public class MainActivity extends AppCompatActivity {
     public void sendAcceptNotification(int currentPostition) {
 
         //get folk boy to whom notification is to be sent.
-        FolkBoyData currentFolkBoy = folkBoyDataArrayList.get(currentPostition);
-        String folkBoyid = currentFolkBoy.getFb_id();
+        FolkBoyData currentFolkBoyData = folkBoyDataArrayList.get(currentPostition);
+//        String folkBoyid = currentFolkBoyData.getFb_id();
 
         //before booking bed, check for the booked beds
-        BookAftercheckingBookedBedInDatabase(folkBoyid);
+        BookAftercheckingBookedBedInDatabase(currentFolkBoyData);
 
 
     }
 
 
-
-
-    private void BookAftercheckingBookedBedInDatabase(final String folk_boy_id) {
+    private void BookAftercheckingBookedBedInDatabase(final FolkBoyData currentFolkBoyData) {
         Log.d(TAG, "BookAftercheckingBookedBedInDatabase: in");
         final ArrayList<String> arrayListBookedBedNo = new ArrayList<>();
-//
+
+//        final String folk_boy_id = currentFolkBoyData.getFb_id();
+
         CollectionReference BookedBedColRef
                 = db.collection("BookedBed");
 
@@ -210,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for (QueryDocumentSnapshot retrievedDoc : queryDocumentSnapshots) {
-                            String booked_bed_no = retrievedDoc.getString("booked_bed");
+                            String booked_bed_no = retrievedDoc.getString("allotedBedNo");
                             arrayListBookedBedNo.add(booked_bed_no);
                         }
 
@@ -219,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
 //                    Log.d(TAG, "onSuccess: last booked bed: " + arrayListBookedBedNo.get(arrayListBookedBedNo.size()-1));
                         Toast.makeText(MainActivity.this, "Booked Bed: " + Arrays.toString(arrayListBookedBedNo.toArray()), Toast.LENGTH_SHORT).show();
 
-                        nowBookBed(arrayListBookedBedNo, folk_boy_id);
+                        nowBookBed(arrayListBookedBedNo, currentFolkBoyData);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -231,15 +272,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    private void nowBookBed(ArrayList<String> arrayListBookedBedNo, String folk_boy_id) {
+
+    private void nowBookBed(ArrayList<String> arrayListBookedBedNo, FolkBoyData currentFolkBoyData) {
         Log.d(TAG, "nowBookBed: in");
 
         String allotedBedNo = "1";
 
-        if (arrayListBookedBedNo.size() ==1) {
+        if (arrayListBookedBedNo.size() == 1) {
 
             Map<String, Object> allotedBed = new HashMap<>();
-            allotedBed.put("booked_bed", allotedBedNo);
+            allotedBed.put("allotedBedNo", allotedBedNo);
 
             db.collection("BookedBed")
                     .add(allotedBed);
@@ -251,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
             allotedBedNo = "" + (latest_bed_alloted + 1);
 
             Map<String, Object> allotedBed = new HashMap<>();
-            allotedBed.put("booked_bed", allotedBedNo);
+            allotedBed.put("allotedBedNo", allotedBedNo);
 
             db.collection("BookedBed")
                     .add(allotedBed);
@@ -280,14 +322,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "jt current time: " + jtCurrentTime);
 
 
-
         // Format for input
         DateTimeFormatter dtf = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm:ss");
 //        String strJtCurrentTime = dtf.parse(jtCurrentTime.toString());
         String strJtCurrentTime = jtCurrentTime.toString();
 
-        DateTime.parse("201711201515",DateTimeFormat.forPattern("yyyyMMddHHmm")).toString("yyyyMMdd");
-
+        DateTime.parse("201711201515", DateTimeFormat.forPattern("yyyyMMddHHmm")).toString("yyyyMMdd");
 
 
         Toast.makeText(this, currentDate + " " + currentTime, Toast.LENGTH_LONG).show();
@@ -297,16 +337,22 @@ public class MainActivity extends AppCompatActivity {
         ////collect notification detail.
         String comment = "Congratulation! " + "\n" + "Your accommodation has been booked.";
 
+        String folkBoyId = currentFolkBoyData.getFb_id();
+        String folkBoyMsgToFg = currentFolkBoyData.getFb_message();
+        String berthPref = currentFolkBoyData.getFb_berth_pref();
+
         HashMap<String, Object> notification = new HashMap<>();
         notification.put("notification: ", comment);
         notification.put("reqAcceptedTime", strJtCurrentTime);
         //        notification.put("fbName", folkBoyName);
         notification.put("allotedBedNo", allotedBedNo);
+        notification.put("fb_berth_pref", berthPref);
+        notification.put("fb_message", folkBoyMsgToFg);
 //        Log.d(TAG, "sendAcceptNotification: alloted bed" + allotedBedNo);
 
 
         db.collection("FolkBoyNotifications")
-                .document(folk_boy_id)
+                .document(folkBoyId)
                 .set(notification);
 
 
